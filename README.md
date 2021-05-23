@@ -1,4 +1,4 @@
-# AzureServiceBusExample
+# Azure Service Bus Example
 Simple Topic/subscription pub/sub example
 
 ## prerequiestes
