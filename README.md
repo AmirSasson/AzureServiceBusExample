@@ -1,5 +1,5 @@
 # AzureServiceBusExample
-simple Topic/susbscription pub sub
+Simple Topic/subscription pub/sub example
 
 ## prerequiestes
 - [dotnet core3.1](https://dotnet.microsoft.com/download) or higher
