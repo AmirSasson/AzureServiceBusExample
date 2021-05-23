@@ -13,7 +13,6 @@ namespace AzureBus.DedupDemo
 {
     class Program
     {
-
         static long receivedMsgCount = 0;
         static long successfulHandleMsgCount = 0;
         static string runId = DateTime.Now.ToString("hhmmss");
@@ -33,8 +32,8 @@ namespace AzureBus.DedupDemo
               .AddJsonFile("appsettings.overrides.json", false, false)
               .Build();
             string connectionString = config.GetValue<string>("ServiceBus:ConnectionString");
-            string topicName = "alertarrived";
-            string subscriptionName = "publish";
+            string topicName = config.GetValue<string>("ServiceBus:TopicName");
+            string subscriptionName = config.GetValue<string>("ServiceBus:SubscriptionName");
 
             await using var client = new ServiceBusClient(connectionString, new ServiceBusClientOptions
             {
@@ -46,10 +45,8 @@ namespace AzureBus.DedupDemo
             var publishTasks = new List<Task>();
             for (int i = 0; i < numOfPublishers; i++)
             {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 var t = publishToTopics(connectionString, topicName, numOfMsgPerPublisher, publisherBatchSize, source);
                 publishTasks.Add(t);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
 
             for (int i = 0; i < numOfHandlers; i++)
