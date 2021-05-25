@@ -98,7 +98,7 @@ namespace AzureBus.DedupDemo
                 (msg, cancel) =>
                 {
                     var str = Encoding.UTF8.GetString(msg.Body);
-                    var obj = JsonSerializer.Deserialize<AlertArrivedData>(str);
+                    var obj = JsonSerializer.Deserialize<MessageData>(str);
                     if (obj.RunId != runId)
                     {
                         return Task.CompletedTask;
@@ -134,9 +134,9 @@ namespace AzureBus.DedupDemo
                 var id = i + 1;
                 Message message = new Message()
                 {
-                    MessageId = $"AlertArrivedData/{id}",
+                    MessageId = $"{runId}.{id}",
                     ContentType = "application/json",
-                    Body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new AlertArrivedData { RunId = runId, Name = $"{runId}.{id}" })),
+                    Body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new MessageData($"{runId}.{id}", runId)))
                 };
                 buffer.Add(message);
                 if (buffer.Count >= publisherBatchSize)
@@ -170,4 +170,5 @@ namespace AzureBus.DedupDemo
             }
         }
     }
+    public record MessageData(string Name, string RunId);
 }
